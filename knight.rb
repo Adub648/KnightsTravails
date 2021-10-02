@@ -6,7 +6,7 @@ class Knight
   attr_accessor :initial_pos
 
   # initial values
-  def initializerudo
+  def initialize
     @found = false
   end
 
