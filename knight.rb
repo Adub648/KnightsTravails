@@ -1,21 +1,22 @@
 # frozen_string_literal: true
+
 require_relative 'node'
 
 class Knight
   attr_accessor :initial_pos
 
   # initial values
-  def initialize
+  def initializerudo
     @found = false
   end
 
   # get start value and start traversal
   def knight_moves(initial, end_val)
-    if initial[0] <= 7 && initial[1] <= 7
-      initial = Node.new(initial)
-    else
-      initial = Node.new([0, 0])
-    end
+    initial = if initial[0] <= 7 && initial[1] <= 7
+                Node.new(initial)
+              else
+                Node.new([0, 0])
+              end
     @initial = initial
     @end_val = end_val
     traverse_tree
@@ -23,38 +24,21 @@ class Knight
 
   # add the possible moves as children to the set node
   def add_possible_moves(initial)
-    if initial == nil
-      return
-    end
+    return if initial.nil?
+
     arr = initial.data
     child_arr = initial.children
     arr1 = arr[0]
     arr2 = arr[1]
-    if arr1 - 1 >= 0 && arr2 + 2 <= 7
-      child_arr.append(Node.new([arr1 - 1, arr2 + 2], initial))
-    end 
-    if arr1 + 1 <= 7 && arr2 + 2 <= 7
-      child_arr.append(Node.new([arr1 + 1, arr2 + 2], initial))
-    end
-    if arr1 + 2 <= 7 && arr2 + 1 <= 7
-      child_arr.append(Node.new([arr1 + 2, arr2 + 1], initial))
-    end
-    if arr1 + 2 <= 7 && arr2 - 1 >= 0
-      child_arr.append(Node.new([arr1 + 2, arr2 - 1], initial))
-    end
-    if arr1 + 1 <= 7 && arr2 - 2 >= 0
-      child_arr.append(Node.new([arr1 + 1, arr2 - 2], initial))
-    end
-    if arr1 - 1 >= 0 && arr2 - 2 >= 0
-      child_arr.append(Node.new([arr1 - 1, arr2 - 2], initial))
-    end
-    if arr1 - 2 >= 0 && arr2 - 1 >= 0
-      child_arr.append(Node.new([arr1 - 2, arr2 - 1], initial))
-    end
-    if arr1 - 2 >= 0 && arr2 + 1 <= 7
-      child_arr.append(Node.new([arr1 - 2, arr2 + 1], initial))
-    end
-    return child_arr
+    child_arr.append(Node.new([arr1 - 1, arr2 + 2], initial)) if arr1 - 1 >= 0 && arr2 + 2 <= 7
+    child_arr.append(Node.new([arr1 + 1, arr2 + 2], initial)) if arr1 + 1 <= 7 && arr2 + 2 <= 7
+    child_arr.append(Node.new([arr1 + 2, arr2 + 1], initial)) if arr1 + 2 <= 7 && arr2 + 1 <= 7
+    child_arr.append(Node.new([arr1 + 2, arr2 - 1], initial)) if arr1 + 2 <= 7 && arr2 - 1 >= 0
+    child_arr.append(Node.new([arr1 + 1, arr2 - 2], initial)) if arr1 + 1 <= 7 && arr2 - 2 >= 0
+    child_arr.append(Node.new([arr1 - 1, arr2 - 2], initial)) if arr1 - 1 >= 0 && arr2 - 2 >= 0
+    child_arr.append(Node.new([arr1 - 2, arr2 - 1], initial)) if arr1 - 2 >= 0 && arr2 - 1 >= 0
+    child_arr.append(Node.new([arr1 - 2, arr2 + 1], initial)) if arr1 - 2 >= 0 && arr2 + 1 <= 7
+    child_arr
   end
 
   # check if given position is the end position
@@ -72,7 +56,7 @@ class Knight
     queue = []
     queue.push(@initial)
 
-    while !queue.empty?
+    until queue.empty?
 
       size = queue.length
       i = 0
@@ -82,13 +66,9 @@ class Knight
         pos = queue.shift
 
         # check first value in queue
-        if !pos.nil?
-          check_moves(pos)
-        end
+        check_moves(pos) unless pos.nil?
 
-        if @found == true
-          return
-        end
+        return if @found == true
 
         # add children to queue
         new_items = add_possible_moves(pos)
@@ -102,7 +82,7 @@ class Knight
   # find the parents of given element and display in array
   def find_parents(pos)
     arr = []
-    until pos.parent == nil
+    until pos.parent.nil?
       pos = pos.parent
       arr.append(pos.data)
     end
@@ -123,33 +103,25 @@ end
 
 # create knight and ask for input from user
 def game
-  knight = Knight.new()
+  knight = Knight.new
 
-  puts "Please enter the x coordinate of the start point of the knight"
-  start_point_x = gets.chomp[0,1].to_i
-  if start_point_x > 7 || start_point_x < 0
-    start_point_x = 0
-  end
+  puts 'Please enter the x coordinate of the start point of the knight'
+  start_point_x = gets.chomp[0, 1].to_i
+  start_point_x = 0 if start_point_x > 7 || start_point_x.negative?
 
-  puts "Please enter the y coordinate of the start point of the knight"
-  start_point_y = gets.chomp[0,1].to_i
-  if start_point_y > 7 || start_point_y < 0
-    start_point_y = 0
-  end
+  puts 'Please enter the y coordinate of the start point of the knight'
+  start_point_y = gets.chomp[0, 1].to_i
+  start_point_y = 0 if start_point_y > 7 || start_point_y.negative?
 
   start_point = [start_point_x, start_point_y]
 
-  puts "Please enter the x coordinate of the end point of the knight"
-  end_point_x = gets.chomp[0,1].to_i
-  if end_point_x > 7 || end_point_x < 0
-    end_point_x = 0
-  end
+  puts 'Please enter the x coordinate of the end point of the knight'
+  end_point_x = gets.chomp[0, 1].to_i
+  end_point_x = 0 if end_point_x > 7 || end_point_x.negative?
 
-  puts "Please enter the y coordinate of the end point of the knight"
-  end_point_y = gets.chomp[0,1].to_i
-  if end_point_y > 7 || end_point_y < 0
-    end_point_y = 0
-  end
+  puts 'Please enter the y coordinate of the end point of the knight'
+  end_point_y = gets.chomp[0, 1].to_i
+  end_point_y = 0 if end_point_y > 7 || end_point_y.negative?
 
   end_point = [end_point_x, end_point_y]
 
@@ -163,14 +135,10 @@ end
 
 # ask user to play again
 def play_again?
-  puts "Would you like to play again? Enter \"Y\" for yes and \"N\" for no."
+  puts 'Would you like to play again? Enter "Y" for yes and "N" for no.'
   input = gets.chomp
 
-  if input.downcase == "y"
-    return true
-  else
-    return false
-  end
+  input.downcase == 'y'
 end
 
 game
